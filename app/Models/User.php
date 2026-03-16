@@ -5,10 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -46,4 +49,45 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    //JWT
+
+
+    public function getJWTIdentifier()
+    {
+        // TODO: Implement getJWTIdentifier() method.
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        // TODO: Implement getJWTCustomClaims() method.
+        return [];
+    }
+
+
+    //relation
+    public function coursesAsStudent(): HasMany
+    {
+        return $this->hasMany(Course::class,'teacher_id');
+    }
+
+    public function favCourses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class,'favorties');
+    }
+
+    public function coursesAsTeacher(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class,'inscriptions');
+    }
+
+    public function StudentInterests(): BelongsToMany
+    {
+        return $this->belongsToMany(Interest::class,'student_interests');
+    }
+
+
+
+
 }
