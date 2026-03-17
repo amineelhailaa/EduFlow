@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('inscriptions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('cours_id')->constrained('cours')->cascadeOnDelete();
+            $table->foreignId('group_id')->nullable()->constrained('groups')->nullOnDelete();
             $table->timestamps();
+
+            $table->unique(['user_id', 'cours_id']);
         });
     }
 
