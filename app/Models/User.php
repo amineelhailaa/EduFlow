@@ -24,6 +24,7 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
+        'role',
         'password',
     ];
 
@@ -65,29 +66,24 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-
-    //relation
-    public function coursesAsStudent(): HasMany
+    public function coursesAsTeacher(): HasMany
     {
-        return $this->hasMany(Course::class,'teacher_id');
+        return $this->hasMany(Course::class, 'teacher_id');
+    }
+
+    public function coursesAsStudent(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'inscriptions', 'user_id', 'cours_id')
+            ->withPivot('group_id');
     }
 
     public function favCourses(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class,'favorties');
+        return $this->belongsToMany(Course::class, 'favorites', 'user_id', 'cours_id');
     }
 
-    public function coursesAsTeacher(): BelongsToMany
+    public function studentInterests(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class,'inscriptions');
+        return $this->belongsToMany(Interest::class, 'student_interests');
     }
-
-    public function StudentInterests(): BelongsToMany
-    {
-        return $this->belongsToMany(Interest::class,'student_interests');
-    }
-
-
-
-
 }

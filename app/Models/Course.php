@@ -9,17 +9,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
+    protected $table = 'cours';
 
+    protected $fillable = [
+        'name',
+        'description',
+        'teacher_id',
+        'interest_id',
+        'price',
+    ];
 
-    //relation
-    public function users(): BelongsToMany
+    public function students(): BelongsToMany
     {
-        return $this->belongsToMany(User::class,'inscriptions');
+        return $this->belongsToMany(User::class, 'inscriptions', 'cours_id', 'user_id')
+            ->withPivot('group_id');
     }
 
     public function groups(): HasMany
     {
-        return $this->hasMany(Group::class,'cours_id');
+        return $this->hasMany(Group::class, 'cours_id');
     }
 
     public function interest(): BelongsTo
@@ -29,16 +37,11 @@ class Course extends Model
 
     public function favUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class,'favorites');
+        return $this->belongsToMany(User::class, 'favorites', 'cours_id', 'user_id');
     }
-
 
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(User::class,'teacher_id');
+        return $this->belongsTo(User::class, 'teacher_id');
     }
-
-
-
-
 }
