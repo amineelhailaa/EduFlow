@@ -2,13 +2,37 @@
 
 namespace App\Services;
 
+use App\Contracts\AuthRepositoryInterface;
+
 class AuthService
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
+    public function __construct(
+        private AuthRepositoryInterface $authRepository,
+    ) {
+    }
+
+    public function register(array $attributes): array
     {
-        //
+        $user = $this->authRepository->createUser($attributes);
+        $token = $this->authRepository->createTokenForUser($user);
+
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
+    }
+
+    public function login(array $credentials): ?array
+    {
+        $token = $this->authRepository->attempt($credentials);
+
+        if ($token === null) {
+            return null;
+        }
+
+        return [
+            'user' => $this->authRepository->authenticatedUser(),
+            'token' => $token,
+        ];
     }
 }
