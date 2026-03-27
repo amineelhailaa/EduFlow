@@ -22,10 +22,8 @@ $registerAuthRoutes();
 
 Route::prefix('v1')->group(function () use ($registerAuthRoutes): void {
     $registerAuthRoutes();
-
-    Route::apiResource('courses', CourseController::class);
-    Route::apiResource('interests', InterestController::class);
-
+    Route::apiResource('courses', CourseController::class)->middleware('auth:api');
+    Route::apiResource('interests', InterestController::class)->middleware('auth:api');
     Route::middleware('auth:api')->group(function (): void {
         Route::get('/courses/favorites', [CourseController::class, 'favorites']);
         Route::get('/courses/matching-interests', [CourseController::class, 'matchingInterests']);

@@ -20,7 +20,6 @@ class AuthController extends Controller
     #[OA\Post(
         path: '/api/v1/register',
         summary: 'Register a new user',
-        tags: ['Auth'],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -43,6 +42,7 @@ class AuthController extends Controller
                 ]
             )
         ),
+        tags: ['Auth'],
         responses: [
             new OA\Response(
                 response: 201,
