@@ -35,4 +35,32 @@ class AuthService
             'token' => $token,
         ];
     }
+
+    public function generateResetPasswordToken(string $email): ?string
+    {
+        $user = $this->authRepository->findUserByEmail($email);
+
+        if (! $user) {
+            return null;
+        }
+
+        return $this->authRepository->createResetPasswordToken($user);
+    }
+
+    public function resetPassword(string $resetToken, string $newPassword): ?array
+    {
+        $user = $this->authRepository->findUserByResetPasswordToken($resetToken);
+
+        if (! $user) {
+            return null;
+        }
+
+        $this->authRepository->updatePassword($user, $newPassword);
+        $this->authRepository->invalidateToken($resetToken);
+
+        return [
+            'user' => $user,
+            'token' => $this->authRepository->createTokenForUser($user),
+        ];
+    }
 }

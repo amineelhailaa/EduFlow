@@ -13,6 +13,8 @@ interface StudentRepositoryInterface
 
     public function findInscription(int $userId, int $courseId): ?Inscription;
 
+    public function findInscriptionByStripeSessionId(string $sessionId): ?Inscription;
+
     public function groupsForCourse(int $courseId): Collection;
 
     public function countGroupStudents(int $groupId): int;
@@ -20,4 +22,6 @@ interface StudentRepositoryInterface
     public function createGroup(int $courseId): Group;
 
     public function createInscription(array $attributes): Inscription;
+
+    public function updateInscription(Inscription $inscription, array $attributes): Inscription;
 }

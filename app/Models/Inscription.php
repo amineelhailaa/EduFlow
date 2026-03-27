@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inscription extends Model
 {
+    public const PAYMENT_UNPAID = 'unpaid';
+    public const PAYMENT_PAID = 'paid';
+
     protected $fillable = [
         'user_id',
         'cours_id',
         'group_id',
+        'payment_status',
+        'stripe_session_id',
     ];
 
     public function user(): BelongsTo

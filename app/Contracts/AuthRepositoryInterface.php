@@ -13,4 +13,14 @@ interface AuthRepositoryInterface
     public function attempt(array $credentials): ?string;
 
     public function authenticatedUser(): ?User;
+
+    public function findUserByEmail(string $email): ?User;
+
+    public function createResetPasswordToken(User $user): string;
+
+    public function findUserByResetPasswordToken(string $token): ?User;
+
+    public function updatePassword(User $user, string $password): void;
+
+    public function invalidateToken(string $token): void;
 }

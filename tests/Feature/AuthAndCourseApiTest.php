@@ -127,4 +127,58 @@ class AuthAndCourseApiTest extends TestCase
             ->assertUnauthorized()
             ->assertJsonPath('message', 'Invalid credentials.');
     }
+
+    public function test_user_can_request_reset_password_token(): void
+    {
+        User::query()->create([
+            'name' => 'Amine',
+            'email' => 'amine@example.com',
+            'password' => 'password123',
+        ]);
+
+        $response = $this->postJson('/api/v1/forgot-password', [
+            'email' => 'amine@example.com',
+        ]);
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('message', 'If the email exists, reset token was generated.')
+            ->assertJsonStructure([
+                'message',
+                'reset_token',
+                'expires_in_minutes',
+            ]);
+
+        $this->assertNotNull($response->json('reset_token'));
+    }
+
+    public function test_user_can_reset_password(): void
+    {
+        User::query()->create([
+            'name' => 'Amine',
+            'email' => 'amine@example.com',
+            'password' => 'password123',
+        ]);
+
+        $forgotResponse = $this->postJson('/api/v1/forgot-password', [
+            'email' => 'amine@example.com',
+        ]);
+
+        $token = $forgotResponse->json('reset_token');
+
+        $this->assertNotNull($token);
+
+        $this->postJson('/api/v1/reset-password', [
+            'token' => $token,
+            'password' => 'newpassword123',
+            'password_confirmation' => 'newpassword123',
+        ])
+            ->assertOk()
+            ->assertJsonPath('message', 'Password reset successful.');
+
+        $this->postJson('/api/v1/login', [
+            'email' => 'amine@example.com',
+            'password' => 'newpassword123',
+        ])->assertOk();
+    }
 }

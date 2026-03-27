@@ -23,6 +23,13 @@ class StudentRepository implements StudentRepositoryInterface
             ->first();
     }
 
+    public function findInscriptionByStripeSessionId(string $sessionId): ?Inscription
+    {
+        return Inscription::query()
+            ->where('stripe_session_id', $sessionId)
+            ->first();
+    }
+
     public function groupsForCourse(int $courseId): Collection
     {
         return Group::query()
@@ -50,5 +57,12 @@ class StudentRepository implements StudentRepositoryInterface
         return Inscription::query()
             ->create($attributes)
             ->load(['course', 'group']);
+    }
+
+    public function updateInscription(Inscription $inscription, array $attributes): Inscription
+    {
+        $inscription->update($attributes);
+
+        return $inscription->fresh(['course', 'group']);
     }
 }
