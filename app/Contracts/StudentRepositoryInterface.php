@@ -24,4 +24,6 @@ interface StudentRepositoryInterface
     public function createInscription(array $attributes): Inscription;
 
     public function updateInscription(Inscription $inscription, array $attributes): Inscription;
+
+    public function deleteInscription(Inscription $inscription): bool;
 }

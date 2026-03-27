@@ -95,4 +95,15 @@ class StudentController extends Controller
             'message' => 'Payment canceled.',
         ]);
     }
+
+    public function leaveCourse(Request $request, Course $course): JsonResponse
+    {
+        $result = $this->studentService->leaveCourse($request->user('api'), $course->id);
+
+        return response()->json([
+            'message' => $result['removed']
+                ? 'Left course successfully.'
+                : 'User is not enrolled in this course.',
+        ]);
+    }
 }

@@ -138,4 +138,23 @@ class StudentService
             'inscription' => $inscription,
         ];
     }
+
+    public function leaveCourse(User $user, int $courseId): array
+    {
+        $course = $this->studentRepository->findCourseOrFail($courseId);
+
+        $inscription = $this->studentRepository->findInscription($user->id, $course->id);
+
+        if ($inscription === null) {
+            return [
+                'removed' => false,
+            ];
+        }
+
+        $this->studentRepository->deleteInscription($inscription);
+
+        return [
+            'removed' => true,
+        ];
+    }
 }

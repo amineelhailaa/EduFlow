@@ -21,7 +21,9 @@ class StudentJoinCourseApiTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $course = Course::query()->create([]);
+        $course = Course::query()->create([
+            'name' => 'Laravel Basics',
+        ]);
         $firstGroup = Group::query()->create([
             'cours_id' => $course->id,
         ]);
@@ -68,7 +70,9 @@ class StudentJoinCourseApiTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $course = Course::query()->create([]);
+        $course = Course::query()->create([
+            'name' => 'Laravel Basics',
+        ]);
         $fullGroup = Group::query()->create([
             'cours_id' => $course->id,
         ]);
@@ -130,7 +134,9 @@ class StudentJoinCourseApiTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $course = Course::query()->create([]);
+        $course = Course::query()->create([
+            'name' => 'Laravel Basics',
+        ]);
         $firstFullGroup = Group::query()->create([
             'cours_id' => $course->id,
         ]);
@@ -181,7 +187,9 @@ class StudentJoinCourseApiTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $course = Course::query()->create([]);
+        $course = Course::query()->create([
+            'name' => 'Laravel Basics',
+        ]);
         $group = Group::query()->create([
             'cours_id' => $course->id,
         ]);
@@ -204,5 +212,64 @@ class StudentJoinCourseApiTest extends TestCase
             ->assertJsonPath('inscription.group_id', $group->id);
 
         $this->assertDatabaseCount('inscriptions', 1);
+    }
+
+    public function test_student_can_leave_a_course(): void
+    {
+        $student = User::query()->create([
+            'name' => 'Student',
+            'email' => 'student@example.com',
+            'password' => 'password123',
+        ]);
+
+        $course = Course::query()->create([
+            'name' => 'Laravel Basics',
+        ]);
+        $group = Group::query()->create([
+            'cours_id' => $course->id,
+        ]);
+
+        Inscription::query()->create([
+            'user_id' => $student->id,
+            'cours_id' => $course->id,
+            'group_id' => $group->id,
+        ]);
+
+        $token = auth('api')->login($student);
+
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer {$token}",
+        ])->deleteJson("/api/v1/courses/{$course->id}/leave");
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('message', 'Left course successfully.');
+
+        $this->assertDatabaseMissing('inscriptions', [
+            'user_id' => $student->id,
+            'cours_id' => $course->id,
+        ]);
+    }
+
+    public function test_leave_course_returns_message_when_student_is_not_enrolled(): void
+    {
+        $student = User::query()->create([
+            'name' => 'Student',
+            'email' => 'student@example.com',
+            'password' => 'password123',
+        ]);
+
+        $course = Course::query()->create([
+            'name' => 'Laravel Basics',
+        ]);
+        $token = auth('api')->login($student);
+
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer {$token}",
+        ])->deleteJson("/api/v1/courses/{$course->id}/leave");
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('message', 'User is not enrolled in this course.');
     }
 }

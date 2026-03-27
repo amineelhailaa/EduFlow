@@ -65,4 +65,9 @@ class StudentRepository implements StudentRepositoryInterface
 
         return $inscription->fresh(['course', 'group']);
     }
+
+    public function deleteInscription(Inscription $inscription): bool
+    {
+        return (bool) $inscription->delete();
+    }
 }
