@@ -23,6 +23,7 @@ class AuthController extends Controller
             'email',
             'role',
             'password',
+            'interest_ids',
         ]));
 
         return response()->json([

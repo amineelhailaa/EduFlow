@@ -13,7 +13,15 @@ class AuthService
 
     public function register(array $attributes): array
     {
+        $interestIds = $attributes['interest_ids'] ?? [];
+        unset($attributes['interest_ids']);
+
         $user = $this->authRepository->createUser($attributes);
+
+        if (($attributes['role'] ?? 'student') === 'student' && $interestIds !== []) {
+            $this->authRepository->syncStudentInterests($user, $interestIds);
+        }
+
         $token = $this->authRepository->createTokenForUser($user);
 
         return [

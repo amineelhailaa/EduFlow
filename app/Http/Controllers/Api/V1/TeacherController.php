@@ -29,4 +29,36 @@ class TeacherController extends Controller
             'courses' => $this->teacherService->studentsInMyCourses($teacher->id),
         ]);
     }
+
+    public function courseGroups(Request $request): JsonResponse
+    {
+        $teacher = $request->user('api');
+
+        if ($teacher->role !== 'teacher') {
+            return response()->json([
+                'message' => 'Only teachers can access this resource.',
+            ], 403);
+        }
+
+        return response()->json([
+            'message' => 'Course groups retrieved successfully.',
+            'courses' => $this->teacherService->groupsInMyCourses($teacher->id),
+        ]);
+    }
+
+    public function groupParticipants(Request $request): JsonResponse
+    {
+        $teacher = $request->user('api');
+
+        if ($teacher->role !== 'teacher') {
+            return response()->json([
+                'message' => 'Only teachers can access this resource.',
+            ], 403);
+        }
+
+        return response()->json([
+            'message' => 'Group participants retrieved successfully.',
+            'courses' => $this->teacherService->participantsByGroupInMyCourses($teacher->id),
+        ]);
+    }
 }

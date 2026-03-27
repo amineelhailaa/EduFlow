@@ -85,4 +85,9 @@ class AuthRepository implements AuthRepositoryInterface
             JWTAuth::setToken($token)->invalidate();
 
     }
+
+    public function syncStudentInterests(User $user, array $interestIds): void
+    {
+        $user->studentInterests()->sync($interestIds);
+    }
 }

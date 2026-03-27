@@ -16,4 +16,14 @@ class TeacherService
     {
         return $this->teacherRepository->coursesWithStudents($teacherId);
     }
+
+    public function groupsInMyCourses(int $teacherId): Collection
+    {
+        return $this->teacherRepository->coursesWithGroups($teacherId);
+    }
+
+    public function participantsByGroupInMyCourses(int $teacherId): Collection
+    {
+        return $this->teacherRepository->coursesWithGroupsAndParticipants($teacherId);
+    }
 }

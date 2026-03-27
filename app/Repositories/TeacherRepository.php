@@ -20,4 +20,35 @@ class TeacherRepository implements TeacherRepositoryInterface
             ->orderBy('id')
             ->get();
     }
+
+    public function coursesWithGroups(int $teacherId): Collection
+    {
+        return Course::query()
+            ->where('teacher_id', $teacherId)
+            ->with([
+                'groups' => function ($query): void {
+                    $query->orderBy('id');
+                },
+            ])
+            ->orderBy('id')
+            ->get();
+    }
+
+    public function coursesWithGroupsAndParticipants(int $teacherId): Collection
+    {
+        return Course::query()
+            ->where('teacher_id', $teacherId)
+            ->with([
+                'groups' => function ($query): void {
+                    $query->orderBy('id')
+                        ->with([
+                            'students' => function ($studentQuery): void {
+                                $studentQuery->select('users.id', 'users.name', 'users.email');
+                            },
+                        ]);
+                },
+            ])
+            ->orderBy('id')
+            ->get();
+    }
 }

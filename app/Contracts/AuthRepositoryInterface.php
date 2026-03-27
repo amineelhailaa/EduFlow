@@ -23,4 +23,6 @@ interface AuthRepositoryInterface
     public function updatePassword(User $user, string $password): void;
 
     public function invalidateToken(string $token): void;
+
+    public function syncStudentInterests(User $user, array $interestIds): void;
 }

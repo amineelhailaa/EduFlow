@@ -181,4 +181,52 @@ class AuthAndCourseApiTest extends TestCase
             'password' => 'newpassword123',
         ])->assertOk();
     }
+
+    public function test_student_can_register_with_interests(): void
+    {
+        $interestOne = Interest::query()->create([
+            'name' => 'Web Development',
+        ]);
+
+        $interestTwo = Interest::query()->create([
+            'name' => 'Data Science',
+        ]);
+
+        $response = $this->postJson('/api/v1/register', [
+            'name' => 'Amine',
+            'email' => 'amine@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'role' => 'student',
+            'interest_ids' => [$interestOne->id, $interestTwo->id],
+        ]);
+
+        $response->assertCreated();
+
+        $userId = $response->json('user.id');
+
+        $this->assertDatabaseHas('student_interests', [
+            'user_id' => $userId,
+            'interest_id' => $interestOne->id,
+        ]);
+
+        $this->assertDatabaseHas('student_interests', [
+            'user_id' => $userId,
+            'interest_id' => $interestTwo->id,
+        ]);
+    }
+
+    public function test_register_rejects_non_existing_interest_id(): void
+    {
+        $this->postJson('/api/v1/register', [
+            'name' => 'Amine',
+            'email' => 'amine@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'role' => 'student',
+            'interest_ids' => [99999],
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['interest_ids.0']);
+    }
 }

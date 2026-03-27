@@ -27,6 +27,8 @@ class RegisterRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'sometimes|in:teacher,student',
+            'interest_ids' => 'sometimes|array|min:1',
+            'interest_ids.*' => 'integer|distinct|exists:interests,id',
         ];
     }
 }
