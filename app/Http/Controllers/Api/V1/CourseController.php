@@ -35,6 +35,19 @@ class CourseController extends Controller
         return response()->json($this->courseService->favoritesByStudent($user->id));
     }
 
+    public function matchingInterests(Request $request): JsonResponse
+    {
+        $user = $request->user('api');
+
+        if ($user->role !== 'student') {
+            return response()->json([
+                'message' => 'Only students can access courses by interests.',
+            ], 403);
+        }
+
+        return response()->json($this->courseService->byStudentInterests($user->id));
+    }
+
     public function store(StoreCourseRequest $request): JsonResponse
     {
         $course = $this->courseService->create($request->validated());

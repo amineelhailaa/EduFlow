@@ -23,6 +23,11 @@ class CourseService
         return $this->courseRepository->favoriteCoursesByStudent($studentId);
     }
 
+    public function byStudentInterests(int $studentId): Collection
+    {
+        return $this->courseRepository->coursesMatchingStudentInterests($studentId);
+    }
+
     public function findOrFail(int $id): Course
     {
         return $this->courseRepository->findOrFail($id);

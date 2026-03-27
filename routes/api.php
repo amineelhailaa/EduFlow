@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     Route::middleware('auth:api')->get('/courses/favorites', [CourseController::class, 'favorites']);
+    Route::middleware('auth:api')->get('/courses/matching-interests', [CourseController::class, 'matchingInterests']);
 
     Route::apiResource('courses', CourseController::class);
     Route::apiResource('interests', InterestController::class);

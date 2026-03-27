@@ -32,6 +32,18 @@ class CourseRepository implements CourseRepositoryInterface
             ->get();
     }
 
+    public function coursesMatchingStudentInterests(int $studentId): Collection
+    {
+        return Course::query()
+            ->whereIn('interest_id', function ($query) use ($studentId): void {
+                $query->select('interest_id')
+                    ->from('student_interests')
+                    ->where('user_id', $studentId);
+            })
+            ->with($this->relations)
+            ->get();
+    }
+
     public function findOrFail(int $id): Course
     {
         return Course::query()
