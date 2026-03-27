@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Contracts\AuthRepositoryInterface;
 use App\Contracts\CourseRepositoryInterface;
+use App\Contracts\FavoriteRepositoryInterface;
 use App\Contracts\InterestRepositoryInterface;
 use App\Contracts\StudentRepositoryInterface;
 use App\Contracts\TeacherRepositoryInterface;
 use App\Repositories\AuthRepository;
 use App\Repositories\CourseRepository;
+use App\Repositories\FavoriteRepository;
 use App\Repositories\InterestRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\TeacherRepository;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(StudentRepositoryInterface::class, StudentRepository::class);
         $this->app->bind(InterestRepositoryInterface::class, InterestRepository::class);
         $this->app->bind(TeacherRepositoryInterface::class, TeacherRepository::class);
+        $this->app->bind(FavoriteRepositoryInterface::class, FavoriteRepository::class);
     }
 
     /**

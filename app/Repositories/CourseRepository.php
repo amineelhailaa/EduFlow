@@ -22,6 +22,16 @@ class CourseRepository implements CourseRepositoryInterface
             ->get();
     }
 
+    public function favoriteCoursesByStudent(int $studentId): Collection
+    {
+        return Course::query()
+            ->whereHas('favUsers', function ($query) use ($studentId): void {
+                $query->where('users.id', $studentId);
+            })
+            ->with($this->relations)
+            ->get();
+    }
+
     public function findOrFail(int $id): Course
     {
         return Course::query()

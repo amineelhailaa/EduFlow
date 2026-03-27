@@ -8,6 +8,7 @@ use App\Http\Requests\Api\V1\UpdateCourseRequest;
 use App\Models\Course;
 use App\Services\CourseService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -19,6 +20,19 @@ class CourseController extends Controller
     public function index(): JsonResponse
     {
         return response()->json($this->courseService->all());
+    }
+
+    public function favorites(Request $request): JsonResponse
+    {
+        $user = $request->user('api');
+
+        if ($user->role !== 'student') {
+            return response()->json([
+                'message' => 'Only students can access favorite courses.',
+            ], 403);
+        }
+
+        return response()->json($this->courseService->favoritesByStudent($user->id));
     }
 
     public function store(StoreCourseRequest $request): JsonResponse

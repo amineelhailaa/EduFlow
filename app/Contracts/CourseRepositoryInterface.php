@@ -9,6 +9,8 @@ interface CourseRepositoryInterface
 {
     public function all(): Collection;
 
+    public function favoriteCoursesByStudent(int $studentId): Collection;
+
     public function findOrFail(int $id): Course;
 
     public function create(array $attributes): Course;
