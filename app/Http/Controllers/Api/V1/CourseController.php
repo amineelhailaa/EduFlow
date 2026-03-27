@@ -23,7 +23,22 @@ class CourseController extends Controller
         summary: 'List all courses',
         tags: ['Courses'],
         responses: [
-            new OA\Response(response: 200, description: 'Courses list'),
+            new OA\Response(
+                response: 200,
+                description: 'Courses list',
+                content: new OA\JsonContent(
+                    type: 'array',
+                    items: new OA\Items(type: 'object'),
+                    example: [[
+                        'id' => 1,
+                        'name' => 'Laravel API',
+                        'description' => 'Build REST APIs with Laravel.',
+                        'teacher_id' => 2,
+                        'interest_id' => 1,
+                        'price' => 300,
+                    ]]
+                )
+            ),
         ]
     )]
     public function index(): JsonResponse
@@ -37,9 +52,38 @@ class CourseController extends Controller
         tags: ['Courses'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Favorite courses list'),
-            new OA\Response(response: 403, description: 'Forbidden'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
+            new OA\Response(
+                response: 200,
+                description: 'Favorite courses list',
+                content: new OA\JsonContent(
+                    type: 'array',
+                    items: new OA\Items(type: 'object'),
+                    example: [[
+                        'id' => 3,
+                        'name' => 'PHP OOP',
+                        'description' => null,
+                        'teacher_id' => 5,
+                        'interest_id' => 2,
+                        'price' => 0,
+                    ]]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Only students can access favorite courses.',
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
         ]
     )]
     public function favorites(Request $request): JsonResponse
@@ -61,9 +105,38 @@ class CourseController extends Controller
         tags: ['Courses'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Matched courses list'),
-            new OA\Response(response: 403, description: 'Forbidden'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
+            new OA\Response(
+                response: 200,
+                description: 'Matched courses list',
+                content: new OA\JsonContent(
+                    type: 'array',
+                    items: new OA\Items(type: 'object'),
+                    example: [[
+                        'id' => 7,
+                        'name' => 'Python Data',
+                        'description' => 'Data analysis basics.',
+                        'teacher_id' => 4,
+                        'interest_id' => 2,
+                        'price' => 200,
+                    ]]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Only students can access courses by interests.',
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
         ]
     )]
     public function matchingInterests(Request $request): JsonResponse
@@ -85,11 +158,54 @@ class CourseController extends Controller
         tags: ['Courses'],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(type: 'object')
+            content: new OA\JsonContent(
+                required: ['name'],
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'Laravel API'),
+                    new OA\Property(property: 'description', type: 'string', nullable: true, example: 'Build REST APIs with Laravel.'),
+                    new OA\Property(property: 'teacher_id', type: 'integer', nullable: true, example: 2),
+                    new OA\Property(property: 'interest_id', type: 'integer', nullable: true, example: 1),
+                    new OA\Property(property: 'price', type: 'integer', example: 300),
+                ],
+                example: [
+                    'name' => 'Laravel API',
+                    'description' => 'Build REST APIs with Laravel.',
+                    'teacher_id' => 2,
+                    'interest_id' => 1,
+                    'price' => 300,
+                ]
+            )
         ),
         responses: [
-            new OA\Response(response: 201, description: 'Course created'),
-            new OA\Response(response: 422, description: 'Validation error'),
+            new OA\Response(
+                response: 201,
+                description: 'Course created',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Course created successfully.',
+                        'course' => [
+                            'id' => 1,
+                            'name' => 'Laravel API',
+                            'description' => 'Build REST APIs with Laravel.',
+                            'teacher_id' => 2,
+                            'interest_id' => 1,
+                            'price' => 300,
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'The given data was invalid.',
+                        'errors' => [
+                            'name' => ['The name field is required.'],
+                        ],
+                    ]
+                )
+            ),
         ]
     )]
     public function store(StoreCourseRequest $request): JsonResponse
@@ -110,8 +226,27 @@ class CourseController extends Controller
             new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Course details'),
-            new OA\Response(response: 404, description: 'Course not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Course details',
+                content: new OA\JsonContent(
+                    example: [
+                        'id' => 1,
+                        'name' => 'Laravel API',
+                        'description' => 'Build REST APIs with Laravel.',
+                        'teacher_id' => 2,
+                        'interest_id' => 1,
+                        'price' => 300,
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Course not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Course] 999']
+                )
+            ),
         ]
     )]
     public function show(int $id): JsonResponse
@@ -128,12 +263,58 @@ class CourseController extends Controller
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(type: 'object')
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'Laravel API Advanced'),
+                    new OA\Property(property: 'description', type: 'string', nullable: true, example: 'Advanced API topics.'),
+                    new OA\Property(property: 'teacher_id', type: 'integer', nullable: true, example: 2),
+                    new OA\Property(property: 'interest_id', type: 'integer', nullable: true, example: 1),
+                    new OA\Property(property: 'price', type: 'integer', example: 400),
+                ],
+                example: [
+                    'name' => 'Laravel API Advanced',
+                    'description' => 'Advanced API topics.',
+                    'price' => 400,
+                ]
+            )
         ),
         responses: [
-            new OA\Response(response: 200, description: 'Course updated'),
-            new OA\Response(response: 422, description: 'Validation error'),
-            new OA\Response(response: 404, description: 'Course not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Course updated',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Course updated successfully.',
+                        'course' => [
+                            'id' => 1,
+                            'name' => 'Laravel API Advanced',
+                            'description' => 'Advanced API topics.',
+                            'teacher_id' => 2,
+                            'interest_id' => 1,
+                            'price' => 400,
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'The given data was invalid.',
+                        'errors' => [
+                            'price' => ['The price must be an integer.'],
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Course not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Course] 999']
+                )
+            ),
         ]
     )]
     public function update(UpdateCourseRequest $request, Course $course): JsonResponse
@@ -154,8 +335,20 @@ class CourseController extends Controller
             new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Course deleted'),
-            new OA\Response(response: 404, description: 'Course not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Course deleted',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Course deleted successfully.']
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Course not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Course] 999']
+                )
+            ),
         ]
     )]
     public function destroy(Course $course): JsonResponse

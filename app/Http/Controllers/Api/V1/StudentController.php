@@ -27,10 +27,59 @@ class StudentController extends Controller
             new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Joined course'),
-            new OA\Response(response: 200, description: 'Already enrolled or checkout required'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
-            new OA\Response(response: 422, description: 'Validation error'),
+            new OA\Response(
+                response: 201,
+                description: 'Joined course',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Joined course successfully.',
+                        'inscription' => [
+                            'id' => 1,
+                            'user_id' => 10,
+                            'cours_id' => 3,
+                            'group_id' => 2,
+                            'payment_status' => 'paid',
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 200,
+                description: 'Already enrolled or checkout required',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Please complete payment to join the course.',
+                        'session_id' => 'cs_test_a1b2c3',
+                        'checkout_url' => 'https://checkout.stripe.com/c/pay/cs_test_a1b2c3',
+                        'inscription' => [
+                            'id' => 1,
+                            'user_id' => 10,
+                            'cours_id' => 3,
+                            'group_id' => null,
+                            'payment_status' => 'unpaid',
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'This course has no payable amount.',
+                        'errors' => [
+                            'course' => ['This course has no payable amount.'],
+                        ],
+                    ]
+                )
+            ),
         ]
     )]
     public function joinCourse(Request $request, Course $course): JsonResponse
@@ -79,9 +128,43 @@ class StudentController extends Controller
             new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Checkout session created or already paid'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
-            new OA\Response(response: 422, description: 'Validation error'),
+            new OA\Response(
+                response: 200,
+                description: 'Checkout session created or already paid',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Checkout session created successfully.',
+                        'session_id' => 'cs_test_a1b2c3',
+                        'checkout_url' => 'https://checkout.stripe.com/c/pay/cs_test_a1b2c3',
+                        'inscription' => [
+                            'id' => 1,
+                            'user_id' => 10,
+                            'cours_id' => 3,
+                            'group_id' => null,
+                            'payment_status' => 'unpaid',
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'This course has no payable amount.',
+                        'errors' => [
+                            'course' => ['This course has no payable amount.'],
+                        ],
+                    ]
+                )
+            ),
         ]
     )]
     public function checkoutCourse(Request $request, Course $course): JsonResponse
@@ -111,8 +194,34 @@ class StudentController extends Controller
             new OA\Parameter(name: 'session_id', in: 'query', required: true, schema: new OA\Schema(type: 'string')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Payment confirmed'),
-            new OA\Response(response: 422, description: 'Validation error'),
+            new OA\Response(
+                response: 200,
+                description: 'Payment confirmed',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Payment confirmed and inscription updated.',
+                        'inscription' => [
+                            'id' => 1,
+                            'user_id' => 10,
+                            'cours_id' => 3,
+                            'group_id' => null,
+                            'payment_status' => 'paid',
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'The given data was invalid.',
+                        'errors' => [
+                            'session_id' => ['The session id field is required.'],
+                        ],
+                    ]
+                )
+            ),
         ]
     )]
     public function paymentSuccess(Request $request): JsonResponse
@@ -136,7 +245,15 @@ class StudentController extends Controller
         summary: 'Handle canceled payment',
         tags: ['Students'],
         responses: [
-            new OA\Response(response: 200, description: 'Payment canceled'),
+            new OA\Response(
+                response: 200,
+                description: 'Payment canceled',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Payment canceled.',
+                    ]
+                )
+            ),
         ]
     )]
     public function paymentCancel(): JsonResponse
@@ -155,9 +272,29 @@ class StudentController extends Controller
             new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Left course or not enrolled'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
-            new OA\Response(response: 404, description: 'Course not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Left course or not enrolled',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Left course successfully.',
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Course not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Course] 999']
+                )
+            ),
         ]
     )]
     public function leaveCourse(Request $request, Course $course): JsonResponse

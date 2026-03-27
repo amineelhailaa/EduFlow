@@ -22,7 +22,18 @@ class InterestController extends Controller
         summary: 'List all interests',
         tags: ['Interests'],
         responses: [
-            new OA\Response(response: 200, description: 'Interests list'),
+            new OA\Response(
+                response: 200,
+                description: 'Interests list',
+                content: new OA\JsonContent(
+                    type: 'array',
+                    items: new OA\Items(type: 'object'),
+                    example: [[
+                        'id' => 1,
+                        'name' => 'Web Development',
+                    ]]
+                )
+            ),
         ]
     )]
     public function index(): JsonResponse
@@ -40,12 +51,38 @@ class InterestController extends Controller
                 required: ['name'],
                 properties: [
                     new OA\Property(property: 'name', type: 'string', example: 'Web Development'),
+                ],
+                example: [
+                    'name' => 'Web Development',
                 ]
             )
         ),
         responses: [
-            new OA\Response(response: 201, description: 'Interest created'),
-            new OA\Response(response: 422, description: 'Validation error'),
+            new OA\Response(
+                response: 201,
+                description: 'Interest created',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Interest created successfully.',
+                        'interest' => [
+                            'id' => 1,
+                            'name' => 'Web Development',
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'The given data was invalid.',
+                        'errors' => [
+                            'name' => ['The name field is required.'],
+                        ],
+                    ]
+                )
+            ),
         ]
     )]
     public function store(StoreInterestRequest $request): JsonResponse
@@ -66,8 +103,23 @@ class InterestController extends Controller
             new OA\Parameter(name: 'interest', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Interest details'),
-            new OA\Response(response: 404, description: 'Interest not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Interest details',
+                content: new OA\JsonContent(
+                    example: [
+                        'id' => 1,
+                        'name' => 'Web Development',
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Interest not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Interest] 999']
+                )
+            ),
         ]
     )]
     public function show(int $id): JsonResponse
@@ -88,13 +140,45 @@ class InterestController extends Controller
                 required: ['name'],
                 properties: [
                     new OA\Property(property: 'name', type: 'string', example: 'Data Science'),
+                ],
+                example: [
+                    'name' => 'Data Science',
                 ]
             )
         ),
         responses: [
-            new OA\Response(response: 200, description: 'Interest updated'),
-            new OA\Response(response: 422, description: 'Validation error'),
-            new OA\Response(response: 404, description: 'Interest not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Interest updated',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Interest updated successfully.',
+                        'interest' => [
+                            'id' => 1,
+                            'name' => 'Data Science',
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'The given data was invalid.',
+                        'errors' => [
+                            'name' => ['The name field is required.'],
+                        ],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Interest not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Interest] 999']
+                )
+            ),
         ]
     )]
     public function update(UpdateInterestRequest $request, Interest $interest): JsonResponse
@@ -115,8 +199,20 @@ class InterestController extends Controller
             new OA\Parameter(name: 'interest', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Interest deleted'),
-            new OA\Response(response: 404, description: 'Interest not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Interest deleted',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Interest deleted successfully.']
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Interest not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Interest] 999']
+                )
+            ),
         ]
     )]
     public function destroy(Interest $interest): JsonResponse

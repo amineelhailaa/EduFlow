@@ -21,9 +21,38 @@ class TeacherController extends Controller
         tags: ['Teachers'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Students grouped by courses'),
-            new OA\Response(response: 403, description: 'Forbidden'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
+            new OA\Response(
+                response: 200,
+                description: 'Students grouped by courses',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Enrolled students retrieved successfully.',
+                        'courses' => [[
+                            'id' => 1,
+                            'name' => 'Laravel API',
+                            'students' => [[
+                                'id' => 10,
+                                'name' => 'Student One',
+                                'email' => 'student1@example.com',
+                            ]],
+                        ]],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Only teachers can access this resource.']
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
         ]
     )]
     public function enrolledStudents(Request $request): JsonResponse
@@ -48,9 +77,37 @@ class TeacherController extends Controller
         tags: ['Teachers'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Course groups'),
-            new OA\Response(response: 403, description: 'Forbidden'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
+            new OA\Response(
+                response: 200,
+                description: 'Course groups',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Course groups retrieved successfully.',
+                        'courses' => [[
+                            'id' => 1,
+                            'name' => 'Laravel API',
+                            'groups' => [
+                                ['id' => 1, 'cours_id' => 1],
+                                ['id' => 2, 'cours_id' => 1],
+                            ],
+                        ]],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Only teachers can access this resource.']
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
         ]
     )]
     public function courseGroups(Request $request): JsonResponse
@@ -75,9 +132,42 @@ class TeacherController extends Controller
         tags: ['Teachers'],
         security: [['bearerAuth' => []]],
         responses: [
-            new OA\Response(response: 200, description: 'Group participants'),
-            new OA\Response(response: 403, description: 'Forbidden'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
+            new OA\Response(
+                response: 200,
+                description: 'Group participants',
+                content: new OA\JsonContent(
+                    example: [
+                        'message' => 'Group participants retrieved successfully.',
+                        'courses' => [[
+                            'id' => 1,
+                            'name' => 'Laravel API',
+                            'groups' => [[
+                                'id' => 1,
+                                'cours_id' => 1,
+                                'students' => [[
+                                    'id' => 10,
+                                    'name' => 'Student One',
+                                    'email' => 'student1@example.com',
+                                ]],
+                            ]],
+                        ]],
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Only teachers can access this resource.']
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
         ]
     )]
     public function groupParticipants(Request $request): JsonResponse

@@ -25,11 +25,41 @@ class FavoriteController extends Controller
             new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 201, description: 'Favorite created'),
-            new OA\Response(response: 200, description: 'Already in favorites'),
-            new OA\Response(response: 403, description: 'Forbidden'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
-            new OA\Response(response: 404, description: 'Course not found'),
+            new OA\Response(
+                response: 201,
+                description: 'Favorite created',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Course added to favorites.']
+                )
+            ),
+            new OA\Response(
+                response: 200,
+                description: 'Already in favorites',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Course is already in favorites.']
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Only students can manage favorites.']
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Course not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Course] 999']
+                )
+            ),
         ]
     )]
     public function store(Request $request, Course $course): JsonResponse
@@ -60,10 +90,34 @@ class FavoriteController extends Controller
             new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: 'Favorite removed or already absent'),
-            new OA\Response(response: 403, description: 'Forbidden'),
-            new OA\Response(response: 401, description: 'Unauthorized'),
-            new OA\Response(response: 404, description: 'Course not found'),
+            new OA\Response(
+                response: 200,
+                description: 'Favorite removed or already absent',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Course removed from favorites.']
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Only students can manage favorites.']
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    example: ['message' => 'Unauthenticated.']
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Course not found',
+                content: new OA\JsonContent(
+                    example: ['message' => 'No query results for model [App\\Models\\Course] 999']
+                )
+            ),
         ]
     )]
     public function destroy(Request $request, Course $course): JsonResponse

@@ -1,59 +1,133 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Course API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel 12 REST API for course management, student enrollment, teacher dashboards, favorites, and interest-based recommendations.
 
-## About Laravel
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-000000)
+![Swagger](https://img.shields.io/badge/Docs-L5--Swagger-85EA2D)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- JWT auth: register, login, forgot/reset password
+- Student interests saved on registration (`student_interests` pivot)
+- Course and interest CRUD
+- Student flows: join course, checkout, payment confirm/cancel, leave course
+- Favorites: add/remove favorite courses and list favorites
+- Personalized endpoint: courses matching student interests
+- Teacher endpoints:
+  - enrolled students in teacher courses
+  - groups in teacher courses
+  - participants in each group
+- Swagger docs using `darkaonline/l5-swagger`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Architecture
 
-## Learning Laravel
+This project follows a layered pattern:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- `Controller` for HTTP layer
+- `Service` for business logic
+- `Repository` for data access
+- Contracts (interfaces) bound in `AppServiceProvider`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Quick Start
 
-## Laravel Sponsors
+### 1. Install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+composer run setup
+```
 
-### Premium Partners
+### 2. Configure environment
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+cp .env.example .env
+php artisan key:generate
+php artisan jwt:secret
+php artisan migrate
+```
 
-## Contributing
+Default DB in `.env.example` is SQLite.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Run locally
 
-## Code of Conduct
+```bash
+composer run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Or minimal server:
 
-## Security Vulnerabilities
+```bash
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## API Documentation (Swagger)
+
+- UI: `GET /api/documentation`
+- Generate docs:
+
+```bash
+php artisan l5-swagger:generate
+```
+
+## API Overview
+
+Base API prefix: `/api/v1` (auth endpoints also exist under `/api`).
+
+### Auth
+- `POST /register`
+- `POST /login`
+- `POST /forgot-password`
+- `POST /reset-password`
+
+### Courses
+- `GET /courses`
+- `POST /courses`
+- `GET /courses/{course}`
+- `PUT|PATCH /courses/{course}`
+- `DELETE /courses/{course}`
+- `GET /courses/favorites` (student)
+- `GET /courses/matching-interests` (student)
+
+### Favorites
+- `POST /courses/{course}/favorites` (student)
+- `DELETE /courses/{course}/favorites` (student)
+
+### Student
+- `POST /courses/{course}/join`
+- `POST /courses/{course}/checkout`
+- `DELETE /courses/{course}/leave`
+- `GET /payments/success`
+- `GET /payments/cancel`
+
+### Teacher
+- `GET /teacher/courses/students`
+- `GET /teacher/courses/groups`
+- `GET /teacher/courses/groups/participants`
+
+## Testing
+
+Run full test suite:
+
+```bash
+composer test
+```
+
+Run a specific file:
+
+```bash
+php artisan test tests/Feature/FavoriteCourseApiTest.php
+```
+
+## Tech Stack
+
+- Laravel 12
+- PHP 8.2+
+- tymon/jwt-auth
+- darkaonline/l5-swagger
+- Stripe PHP SDK
+- PHPUnit 11
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT

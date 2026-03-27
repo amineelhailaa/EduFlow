@@ -70,16 +70,56 @@
                                     }
                                 },
                                 "type": "object"
+                            },
+                            "example": {
+                                "name": "Amine",
+                                "email": "amine@example.com",
+                                "password": "password123",
+                                "password_confirmation": "password123",
+                                "role": "student",
+                                "interest_ids": [
+                                    1,
+                                    2
+                                ]
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "User registered successfully"
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "User registered successfully.",
+                                    "user": {
+                                        "id": 1,
+                                        "name": "Amine",
+                                        "email": "amine@example.com",
+                                        "role": "student"
+                                    },
+                                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                    "token_type": "bearer"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "email": [
+                                            "The email has already been taken."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -113,16 +153,44 @@
                                     }
                                 },
                                 "type": "object"
+                            },
+                            "example": {
+                                "email": "amine@example.com",
+                                "password": "password123"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Login successful"
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Login successful.",
+                                    "user": {
+                                        "id": 1,
+                                        "name": "Amine",
+                                        "email": "amine@example.com",
+                                        "role": "student"
+                                    },
+                                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                    "token_type": "bearer"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Invalid credentials"
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Invalid credentials."
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -150,16 +218,42 @@
                                     }
                                 },
                                 "type": "object"
+                            },
+                            "example": {
+                                "email": "amine@example.com"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Reset token generated"
+                        "description": "Reset token generated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "If the email exists, reset token was generated.",
+                                    "reset_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                    "expires_in_minutes": 60
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "email": [
+                                            "The email field must be a valid email address."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -183,7 +277,8 @@
                                 ],
                                 "properties": {
                                     "token": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
                                     },
                                     "password": {
                                         "type": "string",
@@ -197,16 +292,45 @@
                                     }
                                 },
                                 "type": "object"
+                            },
+                            "example": {
+                                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                "password": "newpassword123",
+                                "password_confirmation": "newpassword123"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Password reset successful"
+                        "description": "Password reset successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Password reset successful.",
+                                    "user": {
+                                        "id": 1,
+                                        "name": "Amine",
+                                        "email": "amine@example.com",
+                                        "role": "student"
+                                    },
+                                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+                                    "token_type": "bearer"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Invalid token or validation error"
+                        "description": "Invalid token or validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Invalid or expired reset token."
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -220,7 +344,27 @@
                 "operationId": "3522f88b734e2061541a8dbd0b6be53c",
                 "responses": {
                     "200": {
-                        "description": "Courses list"
+                        "description": "Courses list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": 1,
+                                        "name": "Laravel API",
+                                        "description": "Build REST APIs with Laravel.",
+                                        "teacher_id": 2,
+                                        "interest_id": 1,
+                                        "price": 300
+                                    }
+                                ]
+                            }
+                        }
                     }
                 }
             },
@@ -235,17 +379,81 @@
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Laravel API"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Build REST APIs with Laravel.",
+                                        "nullable": true
+                                    },
+                                    "teacher_id": {
+                                        "type": "integer",
+                                        "example": 2,
+                                        "nullable": true
+                                    },
+                                    "interest_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "price": {
+                                        "type": "integer",
+                                        "example": 300
+                                    }
+                                },
                                 "type": "object"
+                            },
+                            "example": {
+                                "name": "Laravel API",
+                                "description": "Build REST APIs with Laravel.",
+                                "teacher_id": 2,
+                                "interest_id": 1,
+                                "price": 300
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Course created"
+                        "description": "Course created",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Course created successfully.",
+                                    "course": {
+                                        "id": 1,
+                                        "name": "Laravel API",
+                                        "description": "Build REST APIs with Laravel.",
+                                        "teacher_id": 2,
+                                        "interest_id": 1,
+                                        "price": 300
+                                    }
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "The name field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -259,13 +467,49 @@
                 "operationId": "cd6aed30fa0f0a7a72b6743947402ed4",
                 "responses": {
                     "200": {
-                        "description": "Favorite courses list"
+                        "description": "Favorite courses list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": 3,
+                                        "name": "PHP OOP",
+                                        "description": null,
+                                        "teacher_id": 5,
+                                        "interest_id": 2,
+                                        "price": 0
+                                    }
+                                ]
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Only students can access favorite courses."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -284,13 +528,49 @@
                 "operationId": "2463f51369f1f118a88adff6d9f2e8c3",
                 "responses": {
                     "200": {
-                        "description": "Matched courses list"
+                        "description": "Matched courses list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": 7,
+                                        "name": "Python Data",
+                                        "description": "Data analysis basics.",
+                                        "teacher_id": 4,
+                                        "interest_id": 2,
+                                        "price": 200
+                                    }
+                                ]
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Only students can access courses by interests."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -319,10 +599,31 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Course details"
+                        "description": "Course details",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "name": "Laravel API",
+                                    "description": "Build REST APIs with Laravel.",
+                                    "teacher_id": 2,
+                                    "interest_id": 1,
+                                    "price": 300
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Course not found"
+                        "description": "Course not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Course] 999"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -347,20 +648,87 @@
                     "content": {
                         "application/json": {
                             "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Laravel API Advanced"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Advanced API topics.",
+                                        "nullable": true
+                                    },
+                                    "teacher_id": {
+                                        "type": "integer",
+                                        "example": 2,
+                                        "nullable": true
+                                    },
+                                    "interest_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "price": {
+                                        "type": "integer",
+                                        "example": 400
+                                    }
+                                },
                                 "type": "object"
+                            },
+                            "example": {
+                                "name": "Laravel API Advanced",
+                                "description": "Advanced API topics.",
+                                "price": 400
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Course updated"
+                        "description": "Course updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Course updated successfully.",
+                                    "course": {
+                                        "id": 1,
+                                        "name": "Laravel API Advanced",
+                                        "description": "Advanced API topics.",
+                                        "teacher_id": 2,
+                                        "interest_id": 1,
+                                        "price": 400
+                                    }
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "price": [
+                                            "The price must be an integer."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Course not found"
+                        "description": "Course not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Course] 999"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -382,10 +750,26 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Course deleted"
+                        "description": "Course deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Course deleted successfully."
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Course not found"
+                        "description": "Course not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Course] 999"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -409,19 +793,59 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Favorite created"
+                        "description": "Favorite created",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Course added to favorites."
+                                }
+                            }
+                        }
                     },
                     "200": {
-                        "description": "Already in favorites"
+                        "description": "Already in favorites",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Course is already in favorites."
+                                }
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Only students can manage favorites."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Course not found"
+                        "description": "Course not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Course] 999"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -448,16 +872,48 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Favorite removed or already absent"
+                        "description": "Favorite removed or already absent",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Course removed from favorites."
+                                }
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Only students can manage favorites."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Course not found"
+                        "description": "Course not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Course] 999"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -476,7 +932,23 @@
                 "operationId": "d7211d720712e24b543a9e796efcbb6f",
                 "responses": {
                     "200": {
-                        "description": "Interests list"
+                        "description": "Interests list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": 1,
+                                        "name": "Web Development"
+                                    }
+                                ]
+                            }
+                        }
                     }
                 }
             },
@@ -501,16 +973,44 @@
                                     }
                                 },
                                 "type": "object"
+                            },
+                            "example": {
+                                "name": "Web Development"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Interest created"
+                        "description": "Interest created",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Interest created successfully.",
+                                    "interest": {
+                                        "id": 1,
+                                        "name": "Web Development"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "The name field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -534,10 +1034,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Interest details"
+                        "description": "Interest details",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "name": "Web Development"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Interest not found"
+                        "description": "Interest not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Interest] 999"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -572,19 +1089,55 @@
                                     }
                                 },
                                 "type": "object"
+                            },
+                            "example": {
+                                "name": "Data Science"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Interest updated"
+                        "description": "Interest updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Interest updated successfully.",
+                                    "interest": {
+                                        "id": 1,
+                                        "name": "Data Science"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "name": [
+                                            "The name field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Interest not found"
+                        "description": "Interest not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Interest] 999"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -606,10 +1159,26 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Interest deleted"
+                        "description": "Interest deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Interest deleted successfully."
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Interest not found"
+                        "description": "Interest not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Interest] 999"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -633,16 +1202,69 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Joined course"
+                        "description": "Joined course",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Joined course successfully.",
+                                    "inscription": {
+                                        "id": 1,
+                                        "user_id": 10,
+                                        "cours_id": 3,
+                                        "group_id": 2,
+                                        "payment_status": "paid"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "200": {
-                        "description": "Already enrolled or checkout required"
+                        "description": "Already enrolled or checkout required",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Please complete payment to join the course.",
+                                    "session_id": "cs_test_a1b2c3",
+                                    "checkout_url": "https://checkout.stripe.com/c/pay/cs_test_a1b2c3",
+                                    "inscription": {
+                                        "id": 1,
+                                        "user_id": 10,
+                                        "cours_id": 3,
+                                        "group_id": null,
+                                        "payment_status": "unpaid"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "This course has no payable amount.",
+                                    "errors": {
+                                        "course": [
+                                            "This course has no payable amount."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -671,13 +1293,51 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Checkout session created or already paid"
+                        "description": "Checkout session created or already paid",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Checkout session created successfully.",
+                                    "session_id": "cs_test_a1b2c3",
+                                    "checkout_url": "https://checkout.stripe.com/c/pay/cs_test_a1b2c3",
+                                    "inscription": {
+                                        "id": 1,
+                                        "user_id": 10,
+                                        "cours_id": 3,
+                                        "group_id": null,
+                                        "payment_status": "unpaid"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "This course has no payable amount.",
+                                    "errors": {
+                                        "course": [
+                                            "This course has no payable amount."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -706,10 +1366,38 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Payment confirmed"
+                        "description": "Payment confirmed",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Payment confirmed and inscription updated.",
+                                    "inscription": {
+                                        "id": 1,
+                                        "user_id": 10,
+                                        "cours_id": 3,
+                                        "group_id": null,
+                                        "payment_status": "paid"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "The given data was invalid.",
+                                    "errors": {
+                                        "session_id": [
+                                            "The session id field is required."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -723,7 +1411,15 @@
                 "operationId": "774787c4388a6c7674ca178a4a5ecdd5",
                 "responses": {
                     "200": {
-                        "description": "Payment canceled"
+                        "description": "Payment canceled",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Payment canceled."
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -747,13 +1443,37 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Left course or not enrolled"
+                        "description": "Left course or not enrolled",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Left course successfully."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Course not found"
+                        "description": "Course not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "No query results for model [App\\Models\\Course] 999"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -772,13 +1492,50 @@
                 "operationId": "e21e3978536fceb547df999553224023",
                 "responses": {
                     "200": {
-                        "description": "Students grouped by courses"
+                        "description": "Students grouped by courses",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Enrolled students retrieved successfully.",
+                                    "courses": [
+                                        {
+                                            "id": 1,
+                                            "name": "Laravel API",
+                                            "students": [
+                                                {
+                                                    "id": 10,
+                                                    "name": "Student One",
+                                                    "email": "student1@example.com"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Only teachers can access this resource."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -797,13 +1554,53 @@
                 "operationId": "526436811624444d26bfe059568beb6e",
                 "responses": {
                     "200": {
-                        "description": "Course groups"
+                        "description": "Course groups",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Course groups retrieved successfully.",
+                                    "courses": [
+                                        {
+                                            "id": 1,
+                                            "name": "Laravel API",
+                                            "groups": [
+                                                {
+                                                    "id": 1,
+                                                    "cours_id": 1
+                                                },
+                                                {
+                                                    "id": 2,
+                                                    "cours_id": 1
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Only teachers can access this resource."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -822,13 +1619,56 @@
                 "operationId": "558a32908108966fee09dbdbe98ec7ec",
                 "responses": {
                     "200": {
-                        "description": "Group participants"
+                        "description": "Group participants",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Group participants retrieved successfully.",
+                                    "courses": [
+                                        {
+                                            "id": 1,
+                                            "name": "Laravel API",
+                                            "groups": [
+                                                {
+                                                    "id": 1,
+                                                    "cours_id": 1,
+                                                    "students": [
+                                                        {
+                                                            "id": 10,
+                                                            "name": "Student One",
+                                                            "email": "student1@example.com"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Only teachers can access this resource."
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Unauthenticated."
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
