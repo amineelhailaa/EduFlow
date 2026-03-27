@@ -8,6 +8,7 @@ use App\Http\Requests\Api\V1\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
@@ -16,6 +17,29 @@ class AuthController extends Controller
     ) {
     }
 
+    #[OA\Post(
+        path: '/api/v1/register',
+        summary: 'Register a new user',
+        tags: ['Auth'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name', 'email', 'password', 'password_confirmation'],
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'Amine'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'amine@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'password123'),
+                    new OA\Property(property: 'role', type: 'string', enum: ['student', 'teacher'], example: 'student'),
+                    new OA\Property(property: 'interest_ids', type: 'array', items: new OA\Items(type: 'integer'), example: [1, 2]),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'User registered successfully'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function register(RegisterRequest $request): JsonResponse
     {
         $authData = $this->authService->register($request->safe()->only([
@@ -34,6 +58,25 @@ class AuthController extends Controller
         ], 201);
     }
 
+    #[OA\Post(
+        path: '/api/v1/login',
+        summary: 'Login and receive JWT token',
+        tags: ['Auth'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['email', 'password'],
+                properties: [
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'amine@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Login successful'),
+            new OA\Response(response: 401, description: 'Invalid credentials'),
+        ]
+    )]
     public function login(LoginRequest $request): JsonResponse
     {
         $authData = $this->authService->login($request->safe()->only([
@@ -55,6 +98,24 @@ class AuthController extends Controller
         ]);
     }
 
+    #[OA\Post(
+        path: '/api/v1/forgot-password',
+        summary: 'Generate reset password token',
+        tags: ['Auth'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['email'],
+                properties: [
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'amine@example.com'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Reset token generated'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function forgotPassword(Request $request): JsonResponse
     {
         $data = $request->validate([
@@ -70,6 +131,26 @@ class AuthController extends Controller
         ]);
     }
 
+    #[OA\Post(
+        path: '/api/v1/reset-password',
+        summary: 'Reset password using reset token',
+        tags: ['Auth'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['token', 'password', 'password_confirmation'],
+                properties: [
+                    new OA\Property(property: 'token', type: 'string'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'newpassword123'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'newpassword123'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Password reset successful'),
+            new OA\Response(response: 422, description: 'Invalid token or validation error'),
+        ]
+    )]
     public function resetPassword(Request $request): JsonResponse
     {
         $data = $request->validate([

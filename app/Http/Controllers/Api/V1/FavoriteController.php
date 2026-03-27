@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Services\FavoriteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class FavoriteController extends Controller
 {
@@ -15,6 +16,22 @@ class FavoriteController extends Controller
     ) {
     }
 
+    #[OA\Post(
+        path: '/api/v1/courses/{course}/favorites',
+        summary: 'Add a course to favorites',
+        tags: ['Favorites'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 201, description: 'Favorite created'),
+            new OA\Response(response: 200, description: 'Already in favorites'),
+            new OA\Response(response: 403, description: 'Forbidden'),
+            new OA\Response(response: 401, description: 'Unauthorized'),
+            new OA\Response(response: 404, description: 'Course not found'),
+        ]
+    )]
     public function store(Request $request, Course $course): JsonResponse
     {
         $user = $request->user('api');
@@ -34,6 +51,21 @@ class FavoriteController extends Controller
         ], $created ? 201 : 200);
     }
 
+    #[OA\Delete(
+        path: '/api/v1/courses/{course}/favorites',
+        summary: 'Remove a course from favorites',
+        tags: ['Favorites'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'course', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Favorite removed or already absent'),
+            new OA\Response(response: 403, description: 'Forbidden'),
+            new OA\Response(response: 401, description: 'Unauthorized'),
+            new OA\Response(response: 404, description: 'Course not found'),
+        ]
+    )]
     public function destroy(Request $request, Course $course): JsonResponse
     {
         $user = $request->user('api');
