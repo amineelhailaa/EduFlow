@@ -9,29 +9,39 @@ use App\Http\Controllers\Api\V1\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-Route::prefix('v1')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-    Route::middleware('auth:api')->get('/courses/favorites', [CourseController::class, 'favorites']);
-    Route::middleware('auth:api')->get('/courses/matching-interests', [CourseController::class, 'matchingInterests']);
+$registerAuthRoutes = function (): void {
+    Route::controller(AuthController::class)->group(function (): void {
+        Route::post('/register', 'register');
+        Route::post('/login', 'login');
+        Route::post('/forgot-password', 'forgotPassword');
+        Route::post('/reset-password', 'resetPassword');
+    });
+};
+
+$registerAuthRoutes();
+
+Route::prefix('v1')->group(function () use ($registerAuthRoutes): void {
+    $registerAuthRoutes();
 
     Route::apiResource('courses', CourseController::class);
     Route::apiResource('interests', InterestController::class);
 
-    Route::middleware('auth:api')->post('/courses/{course}/favorites', [FavoriteController::class, 'store']);
-    Route::middleware('auth:api')->delete('/courses/{course}/favorites', [FavoriteController::class, 'destroy']);
-    Route::middleware('auth:api')->post('/courses/{course}/join', [StudentController::class, 'joinCourse']);
-    Route::middleware('auth:api')->post('/courses/{course}/checkout', [StudentController::class, 'checkoutCourse']);
-    Route::middleware('auth:api')->delete('/courses/{course}/leave', [StudentController::class, 'leaveCourse']);
-    Route::middleware('auth:api')->get('/teacher/courses/students', [TeacherController::class, 'enrolledStudents']);
-    Route::middleware('auth:api')->get('/teacher/courses/groups', [TeacherController::class, 'courseGroups']);
-    Route::middleware('auth:api')->get('/teacher/courses/groups/participants', [TeacherController::class, 'groupParticipants']);
+    Route::middleware('auth:api')->group(function (): void {
+        Route::get('/courses/favorites', [CourseController::class, 'favorites']);
+        Route::get('/courses/matching-interests', [CourseController::class, 'matchingInterests']);
+
+        Route::post('/courses/{course}/favorites', [FavoriteController::class, 'store']);
+        Route::delete('/courses/{course}/favorites', [FavoriteController::class, 'destroy']);
+
+        Route::post('/courses/{course}/join', [StudentController::class, 'joinCourse']);
+        Route::post('/courses/{course}/checkout', [StudentController::class, 'checkoutCourse']);
+        Route::delete('/courses/{course}/leave', [StudentController::class, 'leaveCourse']);
+
+        Route::get('/teacher/courses/students', [TeacherController::class, 'enrolledStudents']);
+        Route::get('/teacher/courses/groups', [TeacherController::class, 'courseGroups']);
+        Route::get('/teacher/courses/groups/participants', [TeacherController::class, 'groupParticipants']);
+    });
+
     Route::get('/payments/success', [StudentController::class, 'paymentSuccess'])->name('payments.success');
     Route::get('/payments/cancel', [StudentController::class, 'paymentCancel'])->name('payments.cancel');
 });
